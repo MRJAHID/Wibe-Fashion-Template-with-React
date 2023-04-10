@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { useLocomotiveScroll } from "react-locomotive-scroll";
 
 const NavContainer = styled(motion.div)`
   position: absolute;
@@ -72,6 +73,18 @@ const Item = styled(motion.li)`
 
 const Navbar = () => {
   const [click, setClick] = useState();
+  const { scroll } = useLocomotiveScroll();
+
+  const handleScroll = (id) => {
+    let elem = document.querySelector(id);
+    // console.log(elem);
+    scroll.scrollTo(elem, {
+      offset: "-100",
+      duration: "2000",
+      easing: [0.25, 0.0, 0.35, 1.0],
+    });
+  };
+
   return (
     <NavContainer
       click={+click}
@@ -91,28 +104,28 @@ const Navbar = () => {
         <Item
           whileHover={{ scale: 1.1, y: -5 }}
           whileTap={{ scale: 0.9, y: 0 }}
-          // onClick={() => handleScroll("#home")}
+          onClick={() => handleScroll("#home")}
         >
           <Link to="/">Home</Link>
         </Item>
         <Item
           whileHover={{ scale: 1.1, y: -5 }}
           whileTap={{ scale: 0.9, y: 0 }}
-          // onClick={() => handleScroll(".about")}
+          onClick={() => handleScroll(".about")}
         >
           <Link to="/">About</Link>
         </Item>
         <Item
           whileHover={{ scale: 1.1, y: -5 }}
           whileTap={{ scale: 0.9, y: 0 }}
-          // onClick={() => handleScroll("#shop")}
+          onClick={() => handleScroll("#shop")}
         >
           <Link to="/">Shop</Link>
         </Item>
         <Item
           whileHover={{ scale: 1.1, y: -5 }}
           whileTap={{ scale: 0.9, y: 0 }}
-          // onClick={() => handleScroll(".new-arrival")}
+          onClick={() => handleScroll(".new-arrival")}
         >
           <Link to="/">New Arrival</Link>
         </Item>
