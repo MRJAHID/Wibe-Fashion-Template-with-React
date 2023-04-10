@@ -2,6 +2,7 @@ import React, { Suspense } from "react";
 import styled from "styled-components";
 import CoverVideo from "../components/CoverVideo";
 import Logo from "../components/Logo";
+import Navbar from "../components/Navbar";
 
 const Section = styled.section`
   position: relative;
@@ -14,6 +15,7 @@ const Home = () => {
       <Suspense fallback={<></>}>
         <CoverVideo />
         <Logo />
+        <Navbar />
       </Suspense>
     </Section>
   );
