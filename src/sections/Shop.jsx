@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useLayoutEffect, useRef } from "react";
 import styled from "styled-components";
 import { motion } from "framer-motion";
+import gsap from "gsap";
+import ScrollTrigger from "gsap/ScrollTrigger";
 
 import img1 from "../assets/Images/1.webp";
 import img2 from "../assets/Images/2.webp";
@@ -89,10 +91,96 @@ const Right = styled.div`
   justify-content: flex-start;
   align-items: center;
 `;
+const Item = styled(motion.div)`
+  display: inline-block;
+  width: 20rem;
+  /* background-color: black; */
+  margin-right: 6rem;
+  img {
+    width: 100%;
+    height: auto;
+    cursor: pointer;
+  }
+  h1 {
+    font-weight: 500;
+    text-align: center;
+    cursor: pointer;
+  }
+  @media (max-width: 48em) {
+    width: 15rem;
+  }
+`;
+
+//data-scroll data-scroll-speed="-2" data-scroll-direction="horizontal"
+const Product = ({ img, title = "" }) => {
+  return (
+    // x: 100, y: -100
+    <Item
+      initial={{ filter: "grayscale(100%)" }}
+      whileInView={{ filter: "grayscale(0%)" }}
+      transition={{ duration: 0.5 }}
+      viewport={{ once: false, amount: "all" }}
+    >
+      <img width="400" height="600" src={img} alt={title} />
+      <h1>{title}</h1>
+    </Item>
+  );
+};
 
 const Shop = () => {
+  gsap.registerPlugin(ScrollTrigger);
+  const ref = useRef(null);
+  const Horizontalref = useRef(null);
+
+  useLayoutEffect(() => {
+    let element = ref.current;
+
+    let scrollingElement = Horizontalref.current;
+
+    let pinWrapWidth = scrollingElement.offsetWidth;
+    let t1 = gsap.timeline();
+
+    setTimeout(() => {
+      t1.to(element, {
+        scrollTrigger: {
+          trigger: element,
+          start: "top top",
+          end: `${pinWrapWidth} bottom`,
+          scroller: ".App", //locomotive-scroll
+          scrub: 1,
+          pin: true,
+          // markers: true,
+          // anticipatePin: 1,
+        },
+        height: `${scrollingElement.scrollWidth}px`,
+        ease: "none",
+      });
+
+      t1.to(scrollingElement, {
+        scrollTrigger: {
+          trigger: scrollingElement,
+          start: "top top",
+          end: `${pinWrapWidth} bottom`,
+          scroller: ".App", //locomotive-scroll
+          scrub: 1,
+          // markers: true,
+        },
+        x: -pinWrapWidth,
+
+        ease: "none",
+      });
+      ScrollTrigger.refresh();
+    }, 1000);
+    ScrollTrigger.refresh();
+
+    return () => {
+      t1.kill();
+      ScrollTrigger.kill();
+    };
+  }, []);
+
   return (
-    <Section id="shop">
+    <Section ref={ref} id="shop">
       <Title data-scroll data-scroll-speed="-1">
         New Collection
       </Title>
@@ -110,10 +198,17 @@ const Shop = () => {
           country and look different.
         </p>
       </Left>
-      <Right>
-        <h1>img</h1>
-        <h1>img</h1>
-        <h1>img</h1>
+      <Right data-scroll ref={Horizontalref}>
+        <Product img={img3} title="Sweatshirts" />
+        <Product img={img4} title="Ethnic Wear" />
+        <Product img={img1} title="Man Basics" />
+        <Product img={img2} title="Tops" />
+        <Product img={img5} title="Blazers" />
+        <Product img={img6} title="Suits" />
+        <Product img={img7} title="Antiques" />
+        <Product img={img8} title="Jewellery" />
+        <Product img={img9} title="Watches" />
+        <Product img={img10} title="Special Edition" />
       </Right>
     </Section>
   );
